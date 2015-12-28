@@ -1,0 +1,19 @@
+# Sudo is required for docker
+sudo: required
+
+language: go
+
+go:
+  - 1.5.1
+
+# Enable docker
+services:
+  - docker
+  
+  before_install:
+  - docker pull mysql
+
+# In Travis, we need to bind to 127.0.0.1 in order to get a working connection. This environment variable
+# tells dockertest to do that.
+env:
+  - DOCKERTEST_BIND_LOCALHOST=true
