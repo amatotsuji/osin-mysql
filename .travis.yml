@@ -18,10 +18,8 @@ install:
   - go get golang.org/x/tools/cmd/vet
   - go get golang.org/x/tools/cmd/cover
   - go get -u github.com/golang/lint/golint
-  - go get github.com/mattn/goveralls
   - go get -t -d ./...
 
 script:
   - go vet -x ./storage/...
   - golint ./storage/...
-  - ./coverage --coveralls
