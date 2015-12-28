@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"testing"
 	"time"
-
 	"github.com/RangelReale/osin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/ory-am/common/pkg"
