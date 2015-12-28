@@ -9,7 +9,7 @@ env:
   - DOCKER_BIND_LOCALHOST=true
 
 go:
-  - 1.5.1
+  - 1.5.2
 
 before_install:
   - docker pull mysql
