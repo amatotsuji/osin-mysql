@@ -1,7 +1,7 @@
 # osin-mysql ![Travis](https://travis-ci.org/felipeweb/osin-mysql.svg?branch=master)
 
 A MySQL storage backend for [osin oauth2](https://github.com/RangelReale/osin).
-Additional to implementing the `osin.Storage` interface, the `github.com/felipeweb/osin-mysql/osin_mysql.Storage` interface defines new methods:
+Additional to implementing the `osin.Storage` interface, the `github.com/felipeweb/osin-mysql/storage.Storage` interface defines new methods:
 
 ```
 // CreateClient stores the client in the database and returns an error, if something went wrong
@@ -32,7 +32,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/felipeweb/osin-mysql"
+	"github.com/felipeweb/osin-mysql/mysql"
 	"github.com/RangelReale/osin"
 )
 
