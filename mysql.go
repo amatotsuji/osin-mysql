@@ -1,4 +1,4 @@
-package osin_mysql
+package mysql
 import (
 	"database/sql"
 	"fmt"

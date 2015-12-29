@@ -1,4 +1,4 @@
-package osin_mysql
+package storage
 import "github.com/RangelReale/osin"
 
 // Storage extends github.com/RangelReale/osin.Storage with create, update and delete methods for clients.
