@@ -1,3 +1,4 @@
+// Package storage defines an interface, which all osin-storage implementations are going to support.
 package storage
 import "github.com/RangelReale/osin"
 
