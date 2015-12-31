@@ -11,33 +11,33 @@ import (
 )
 
 var schemas = []string{`CREATE TABLE IF NOT EXISTS client (
-	id           varchar NOT NULL PRIMARY KEY,
-	secret 		 varchar NOT NULL,
-	extra 		 varchar NOT NULL,
-	redirect_uri varchar NOT NULL
+	id           varchar(255) NOT NULL PRIMARY KEY,
+	secret 		 varchar(255) NOT NULL,
+	extra 		 varchar(255) NOT NULL,
+	redirect_uri varchar(255) NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS authorize (
-	client       varchar NOT NULL,
-	code         varchar NOT NULL PRIMARY KEY,
-	expires_in   int NOT NULL,
-	scope        varchar NOT NULL,
-	redirect_uri varchar NOT NULL,
-	state        varchar NOT NULL,
-	extra 		 varchar NOT NULL,
-	created_at   timestamp with time zone NOT NULL
+	client       varchar(255) NOT NULL,
+	code         varchar(255) NOT NULL PRIMARY KEY,
+	expires_in   int(10) NOT NULL,
+	scope        varchar(255) NOT NULL,
+	redirect_uri varchar(255) NOT NULL,
+	state        varchar(255) NOT NULL,
+	extra 		 varchar(255) NOT NULL,
+	created_at   timestamp(6) NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS access (
-	client        varchar NOT NULL,
-	authorize     varchar NOT NULL,
-	previous      varchar NOT NULL,
-	access_token  varchar NOT NULL PRIMARY KEY,
-	refresh_token varchar NOT NULL,
-	expires_in    int NOT NULL,
-	scope         varchar NOT NULL,
-	redirect_uri  varchar NOT NULL,
-	extra 		  varchar NOT NULL,
-	created_at    timestamp with time zone NOT NULL
+	client        varchar(255) NOT NULL,
+	authorize     varchar(255) NOT NULL,
+	previous      varchar(255) NOT NULL,
+	access_token  varchar(255) NOT NULL PRIMARY KEY,
+	refresh_token varchar(255) NOT NULL,
+	expires_in    int(10) NOT NULL,
+	scope         varchar(255) NOT NULL,
+	redirect_uri  varchar(255) NOT NULL,
+	extra 		  varchar(255) NOT NULL,
+	created_at    timestamp(6) NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS refresh (
-	token         varchar NOT NULL PRIMARY KEY,
-	access        varchar NOT NULL
+	token         varchar(255) NOT NULL PRIMARY KEY,
+	access        varchar(255) NOT NULL
 )`}
 
 // Storage implements interface "github.com/RangelReale/osin".Storage and interface "github.com/felipeweb/osin-mysql/storage".Storage
