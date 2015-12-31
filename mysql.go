@@ -11,33 +11,33 @@ import (
 )
 
 var schemas = []string{`CREATE TABLE IF NOT EXISTS client (
-	id           text NOT NULL PRIMARY KEY,
-	secret 		 text NOT NULL,
-	extra 		 text NOT NULL,
-	redirect_uri text NOT NULL
+	id           varchar NOT NULL PRIMARY KEY,
+	secret 		 varchar NOT NULL,
+	extra 		 varchar NOT NULL,
+	redirect_uri varchar NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS authorize (
-	client       text NOT NULL,
-	code         text NOT NULL PRIMARY KEY,
+	client       varchar NOT NULL,
+	code         varchar NOT NULL PRIMARY KEY,
 	expires_in   int NOT NULL,
-	scope        text NOT NULL,
-	redirect_uri text NOT NULL,
-	state        text NOT NULL,
-	extra 		 text NOT NULL,
+	scope        varchar NOT NULL,
+	redirect_uri varchar NOT NULL,
+	state        varchar NOT NULL,
+	extra 		 varchar NOT NULL,
 	created_at   timestamp with time zone NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS access (
-	client        text NOT NULL,
-	authorize     text NOT NULL,
-	previous      text NOT NULL,
-	access_token  text NOT NULL PRIMARY KEY,
-	refresh_token text NOT NULL,
+	client        varchar NOT NULL,
+	authorize     varchar NOT NULL,
+	previous      varchar NOT NULL,
+	access_token  varchar NOT NULL PRIMARY KEY,
+	refresh_token varchar NOT NULL,
 	expires_in    int NOT NULL,
-	scope         text NOT NULL,
-	redirect_uri  text NOT NULL,
-	extra 		  text NOT NULL,
+	scope         varchar NOT NULL,
+	redirect_uri  varchar NOT NULL,
+	extra 		  varchar NOT NULL,
 	created_at    timestamp with time zone NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS refresh (
-	token         text NOT NULL PRIMARY KEY,
-	access        text NOT NULL
+	token         varchar NOT NULL PRIMARY KEY,
+	access        varchar NOT NULL
 )`}
 
 // Storage implements interface "github.com/RangelReale/osin".Storage and interface "github.com/felipeweb/osin-mysql/storage".Storage
