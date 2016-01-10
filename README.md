@@ -45,7 +45,7 @@ func main() {
         return nil, err
     }
 
-    store := osin_mysql.New(db)
+    store := mysql.New(db)
     server := osin.NewServer(osin.NewServerConfig(), store)
 
     // See the osin documentation for more information
