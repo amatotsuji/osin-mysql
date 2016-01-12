@@ -6,7 +6,7 @@ A MySQL storage backend for [osin oauth2](https://github.com/RangelReale/osin).
 Additional to implementing the `osin.Storage` interface, the `github.com/felipeweb/osin-mysql/storage.Storage` interface defines new methods:
 
 ```
-// CreateClient stores the client in the database and returns an error, if something went wrong
+// CreateClient stores the client in the database and returns an error, if something went wrong.
 CreateClient(client osin.Client) error
 
 // UpdateClient updates the client (identified by it's id) and replaces the values with the values of client.
