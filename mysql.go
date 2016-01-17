@@ -75,7 +75,7 @@ func (s *Storage) Close() {
 
 // GetClient loads the client by id
 func (s *Storage) GetClient(id string) (osin.Client, error) {
-	row := s.db.QueryRow("SELECT id, secret, redirect_uri, extra FROM client WHERE id=$1", id)
+	row := s.db.QueryRow("SELECT id, secret, redirect_uri, extra FROM client WHERE id=?", id)
 	var c osin.DefaultClient
 	var extra string
 
@@ -95,7 +95,7 @@ func (s *Storage) UpdateClient(c osin.Client) error {
 		return err
 	}
 
-	if _, err := s.db.Exec("UPDATE client SET (secret, redirect_uri, extra) = ($2, $3, $4) WHERE id=$1", c.GetId(), c.GetSecret(), c.GetRedirectUri(), data); err != nil {
+	if _, err := s.db.Exec("UPDATE client SET (secret, redirect_uri, extra) = (?, ?, ?) WHERE id=?", c.GetSecret(), c.GetRedirectUri(), data, c.GetId()); err != nil {
 		return errors.New(err)
 	}
 	return nil
@@ -108,7 +108,7 @@ func (s *Storage) CreateClient(c osin.Client) error {
 		return err
 	}
 
-	if _, err := s.db.Exec("INSERT INTO client (id, secret, redirect_uri, extra) VALUES ($1, $2, $3, $4)", c.GetId(), c.GetSecret(), c.GetRedirectUri(), data); err != nil {
+	if _, err := s.db.Exec("INSERT INTO client (id, secret, redirect_uri, extra) VALUES (?, ?, ?, ?)", c.GetId(), c.GetSecret(), c.GetRedirectUri(), data); err != nil {
 		return errors.New(err)
 	}
 	return nil
@@ -116,7 +116,7 @@ func (s *Storage) CreateClient(c osin.Client) error {
 
 // RemoveClient removes a client (identified by id) from the database. Returns an error if something went wrong.
 func (s *Storage) RemoveClient(id string) (err error) {
-	if _, err = s.db.Exec("DELETE FROM client WHERE id=$1", id); err != nil {
+	if _, err = s.db.Exec("DELETE FROM client WHERE id=?", id); err != nil {
 		return errors.New(err)
 	}
 	return nil
@@ -130,7 +130,7 @@ func (s *Storage) SaveAuthorize(data *osin.AuthorizeData) (err error) {
 	}
 
 	if _, err = s.db.Exec(
-		"INSERT INTO authorize (client, code, expires_in, scope, redirect_uri, state, created_at, extra) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+		"INSERT INTO authorize (client, code, expires_in, scope, redirect_uri, state, created_at, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 		data.Client.GetId(),
 		data.Code,
 		data.ExpiresIn,
@@ -152,7 +152,7 @@ func (s *Storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 	var data osin.AuthorizeData
 	var extra string
 	var cid string
-	if err := s.db.QueryRow("SELECT client, code, expires_in, scope, redirect_uri, state, created_at, extra FROM authorize WHERE code=$1 LIMIT 1", code).Scan(&cid, &data.Code, &data.ExpiresIn, &data.Scope, &data.RedirectUri, &data.State, &data.CreatedAt, &extra); err == sql.ErrNoRows {
+	if err := s.db.QueryRow("SELECT client, code, expires_in, scope, redirect_uri, state, created_at, extra FROM authorize WHERE code=? LIMIT 1", code).Scan(&cid, &data.Code, &data.ExpiresIn, &data.Scope, &data.RedirectUri, &data.State, &data.CreatedAt, &extra); err == sql.ErrNoRows {
 		return nil, pkg.ErrNotFound
 	} else if err != nil {
 		return nil, errors.New(err)
@@ -174,7 +174,7 @@ func (s *Storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 
 // RemoveAuthorize revokes or deletes the authorization code.
 func (s *Storage) RemoveAuthorize(code string) (err error) {
-	if _, err = s.db.Exec("DELETE FROM authorize WHERE code=$1", code); err != nil {
+	if _, err = s.db.Exec("DELETE FROM authorize WHERE code=?", code); err != nil {
 		return errors.New(err)
 	}
 	return nil
@@ -214,7 +214,7 @@ func (s *Storage) SaveAccess(data *osin.AccessData) (err error) {
 		return errors.New("data.Client must not be nil")
 	}
 
-	_, err = tx.Exec("INSERT INTO access (client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)", data.Client.GetId(), authorizeData.Code, prev, data.AccessToken, data.RefreshToken, data.ExpiresIn, data.Scope, data.RedirectUri, data.CreatedAt, extra)
+	_, err = tx.Exec("INSERT INTO access (client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra) VALUES (?, ?, $?, ?, ?, ?, ?, ?, ?, ?)", data.Client.GetId(), authorizeData.Code, prev, data.AccessToken, data.RefreshToken, data.ExpiresIn, data.Scope, data.RedirectUri, data.CreatedAt, extra)
 	if err != nil {
 		if rbe := tx.Rollback(); rbe != nil {
 			return errors.New(rbe)
@@ -237,7 +237,7 @@ func (s *Storage) LoadAccess(code string) (*osin.AccessData, error) {
 	var result osin.AccessData
 
 	if err := s.db.QueryRow(
-		"SELECT client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra FROM access WHERE access_token=$1 LIMIT 1",
+		"SELECT client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra FROM access WHERE access_token=? LIMIT 1",
 		code,
 	).Scan(
 		&cid,
@@ -271,7 +271,7 @@ func (s *Storage) LoadAccess(code string) (*osin.AccessData, error) {
 
 // RemoveAccess revokes or deletes an AccessData.
 func (s *Storage) RemoveAccess(code string) (err error) {
-	_, err = s.db.Exec("DELETE FROM access WHERE access_token=$1", code)
+	_, err = s.db.Exec("DELETE FROM access WHERE access_token=?", code)
 	if err != nil {
 		return errors.New(err)
 	}
@@ -282,7 +282,7 @@ func (s *Storage) RemoveAccess(code string) (err error) {
 // AuthorizeData and AccessData DON'T NEED to be loaded if not easily available.
 // Optionally can return error if expired.
 func (s *Storage) LoadRefresh(code string) (*osin.AccessData, error) {
-	row := s.db.QueryRow("SELECT access FROM refresh WHERE token=$1 LIMIT 1", code)
+	row := s.db.QueryRow("SELECT access FROM refresh WHERE token=? LIMIT 1", code)
 	var access string
 	if err := row.Scan(&access); err == sql.ErrNoRows {
 		return nil, pkg.ErrNotFound
@@ -302,7 +302,7 @@ func (s *Storage) RemoveRefresh(code string) error {
 }
 
 func (s *Storage) saveRefresh(tx *sql.Tx, refresh, access string) (err error) {
-	_, err = tx.Exec("INSERT INTO refresh (token, access) VALUES ($1, $2)", refresh, access)
+	_, err = tx.Exec("INSERT INTO refresh (token, access) VALUES (?, ?)", refresh, access)
 	if err != nil {
 		if rbe := tx.Rollback(); rbe != nil {
 			return errors.New(rbe)
