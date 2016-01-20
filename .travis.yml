@@ -9,7 +9,7 @@ env:
   - DOCKER_BIND_LOCALHOST=true
 
 go:
-  - 1.5.2
+  - 1.5.3
 
 before_install:
   - docker pull mysql
@@ -21,5 +21,5 @@ install:
   - go get -t -d ./...
 
 script:
-  - go vet -x ./storage/...
-  - golint ./storage/...
+  - go vet -x ./...
+  - golint ./...
