@@ -301,6 +301,16 @@ func (s *Storage) RemoveRefresh(code string) error {
 	return nil
 }
 
+// Makes easy to create a osin.DefaultClient
+func (s *Storage) CreateClientWithInformation(id string, secret string, redirectUri string, userData interface{}) osin.Client {
+	return osin.DefaultClient{
+		Id: id,
+		Secret: secret,
+		RedirectUri: redirectUri,
+		UserData: userData,
+	}
+}
+
 func (s *Storage) saveRefresh(tx *sql.Tx, refresh, access string) (err error) {
 	_, err = tx.Exec("INSERT INTO refresh (token, access) VALUES (?, ?)", refresh, access)
 	if err != nil {

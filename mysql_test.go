@@ -280,6 +280,14 @@ func TestAssertToString(t *testing.T) {
 	assert.Equal(t, "foo", res)
 }
 
+func TestCreateClientWithInformation(t *testing.T) {
+	res := store.CreateClientWithInformation("1", "123", "http://test.com/redirect", "data")
+	assert.Equal(t, "1", res.GetId())
+	assert.Equal(t, "123", res.GetSecret())
+	assert.Equal(t, "http://test.com/redirect", res.GetRedirectUri())
+	assert.Equal(t, "data", res.GetUserData())
+}
+
 func getClient(t *testing.T, store Storage, set osin.Client) {
 	client, err := store.GetClient(set.GetId())
 	require.Nil(t, err)
