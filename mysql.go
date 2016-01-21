@@ -303,7 +303,7 @@ func (s *Storage) RemoveRefresh(code string) error {
 
 // Makes easy to create a osin.DefaultClient
 func (s *Storage) CreateClientWithInformation(id string, secret string, redirectUri string, userData interface{}) osin.Client {
-	return osin.DefaultClient{
+	return &osin.DefaultClient{
 		Id: id,
 		Secret: secret,
 		RedirectUri: redirectUri,

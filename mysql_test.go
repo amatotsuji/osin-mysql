@@ -39,17 +39,17 @@ func TestMain(m *testing.M) {
 
 func TestClientOperations(t *testing.T) {
 	create := &osin.DefaultClient{Id: "1", Secret: "secret", RedirectUri: "http://localhost/", UserData: ""}
-	createClient(t, store, create)
-	getClient(t, store, create)
+	createClient(t, *store, create)
+	getClient(t, *store, create)
 
 	update := &osin.DefaultClient{Id: "1", Secret: "secret123", RedirectUri: "http://www.google.com/", UserData: "{}"}
-	updateClient(t, store, update)
-	getClient(t, store, update)
+	updateClient(t, *store, update)
+	getClient(t, *store, update)
 }
 
 func TestAuthorizeOperations(t *testing.T) {
 	client := &osin.DefaultClient{Id: "2", Secret: "secret", RedirectUri: "http://localhost/", UserData: ""}
-	createClient(t, store, client)
+	createClient(t, *store, client)
 
 	for k, authorize := range []*osin.AuthorizeData{
 		{
@@ -79,7 +79,7 @@ func TestAuthorizeOperations(t *testing.T) {
 		require.NotNil(t, err)
 	}
 
-	removeClient(t, store, client)
+	removeClient(t, *store, client)
 }
 
 func TestStoreFailsOnInvalidUserData(t *testing.T) {
@@ -147,7 +147,7 @@ func TestAccessOperations(t *testing.T) {
 		UserData:  userDataMock,
 	}
 
-	createClient(t, store, client)
+	createClient(t, *store, client)
 	require.Nil(t, store.SaveAuthorize(authorize))
 	require.Nil(t, store.SaveAccess(nestedAccess))
 	require.Nil(t, store.SaveAccess(access))
@@ -175,7 +175,7 @@ func TestAccessOperations(t *testing.T) {
 	require.NotNil(t, err)
 
 	require.Nil(t, store.RemoveAuthorize(authorize.Code))
-	removeClient(t, store, client)
+	removeClient(t, *store, client)
 }
 
 func TestRefreshOperations(t *testing.T) {
@@ -209,7 +209,7 @@ func TestRefreshOperations(t *testing.T) {
 			},
 		},
 	} {
-		createClient(t, store, client)
+		createClient(t, *store, client)
 		require.Nil(t, store.SaveAuthorize(c.access.AuthorizeData), "Case %d", k)
 		require.Nil(t, store.SaveAccess(c.access), "Case %d", k)
 
@@ -236,7 +236,7 @@ func TestRefreshOperations(t *testing.T) {
 		require.NotNil(t, err, "Case %d", k)
 
 	}
-	removeClient(t, store, client)
+	removeClient(t, *store, client)
 }
 
 func TestErrors(t *testing.T) {
