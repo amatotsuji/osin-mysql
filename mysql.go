@@ -1,5 +1,6 @@
-// Package postgres is a osin storage implementation for mysql.
+// Package mysql is a osin storage implementation for mysql.
 package mysql
+
 import (
 	"database/sql"
 	"fmt"
@@ -304,10 +305,10 @@ func (s *Storage) RemoveRefresh(code string) error {
 // Makes easy to create a osin.DefaultClient
 func (s *Storage) CreateClientWithInformation(id string, secret string, redirectUri string, userData interface{}) osin.Client {
 	return &osin.DefaultClient{
-		Id: id,
-		Secret: secret,
+		Id:          id,
+		Secret:      secret,
 		RedirectUri: redirectUri,
-		UserData: userData,
+		UserData:    userData,
 	}
 }
 
@@ -334,4 +335,3 @@ func assertToString(in interface{}) (string, error) {
 	}
 	return "", errors.Errorf(`Could not assert "%v" to string`, in)
 }
-

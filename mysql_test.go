@@ -2,18 +2,18 @@ package mysql
 
 import (
 	"database/sql"
+	"github.com/RangelReale/osin"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/ory-am/common/pkg"
+	"github.com/ory-am/dockertest"
+	"github.com/pborman/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"log"
 	"os"
 	"reflect"
 	"testing"
 	"time"
-	"github.com/RangelReale/osin"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/ory-am/common/pkg"
-	"github.com/pborman/uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"github.com/ory-am/dockertest"
 )
 
 var db *sql.DB
@@ -23,7 +23,7 @@ var userDataMock = "bar"
 func TestMain(m *testing.M) {
 	var err error
 	var c dockertest.ContainerID
-	c, db, err = dockertest.OpenMySQLContainerConnection(15, time.Millisecond * 500)
+	c, db, err = dockertest.OpenMySQLContainerConnection(15, time.Millisecond*500)
 	if err != nil {
 		log.Fatalf("Could not set up MySQL container: %v", err)
 	}
@@ -59,8 +59,8 @@ func TestAuthorizeOperations(t *testing.T) {
 			Scope:       "scope",
 			RedirectUri: "http://localhost/",
 			State:       "state",
-			CreatedAt: time.Now().Round(time.Second),
-			UserData:  userDataMock,
+			CreatedAt:   time.Now().Round(time.Second),
+			UserData:    userDataMock,
 		},
 	} {
 		// Test save
@@ -119,8 +119,8 @@ func TestAccessOperations(t *testing.T) {
 		Scope:       "scope",
 		RedirectUri: "http://localhost/",
 		State:       "state",
-		CreatedAt: time.Now().Round(time.Second),
-		UserData:  userDataMock,
+		CreatedAt:   time.Now().Round(time.Second),
+		UserData:    userDataMock,
 	}
 	nestedAccess := &osin.AccessData{
 		Client:        client,
@@ -131,8 +131,8 @@ func TestAccessOperations(t *testing.T) {
 		ExpiresIn:     int32(60),
 		Scope:         "scope",
 		RedirectUri:   "https://localhost/",
-		CreatedAt: time.Now().Round(time.Second),
-		UserData:  userDataMock,
+		CreatedAt:     time.Now().Round(time.Second),
+		UserData:      userDataMock,
 	}
 	access := &osin.AccessData{
 		Client:        client,
@@ -143,8 +143,8 @@ func TestAccessOperations(t *testing.T) {
 		ExpiresIn:     int32(60),
 		Scope:         "scope",
 		RedirectUri:   "https://localhost/",
-		CreatedAt: time.Now().Round(time.Second),
-		UserData:  userDataMock,
+		CreatedAt:     time.Now().Round(time.Second),
+		UserData:      userDataMock,
 	}
 
 	createClient(t, *store, client)
@@ -195,7 +195,7 @@ func TestRefreshOperations(t *testing.T) {
 					Scope:       "scope",
 					RedirectUri: "http://localhost/",
 					State:       "state",
-					CreatedAt:    time.Now().Round(time.Second),
+					CreatedAt:   time.Now().Round(time.Second),
 					UserData:    userDataMock,
 				},
 				AccessData:   nil,
@@ -204,7 +204,7 @@ func TestRefreshOperations(t *testing.T) {
 				ExpiresIn:    int32(60),
 				Scope:        "scope",
 				RedirectUri:  "https://localhost/",
-				CreatedAt:     time.Now().Round(time.Second),
+				CreatedAt:    time.Now().Round(time.Second),
 				UserData:     userDataMock,
 			},
 		},
